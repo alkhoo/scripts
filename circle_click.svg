@@ -1,0 +1,36 @@
+<?xml version="1.0" standalone="no"?>
+ <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns='http://www.w3.org/2000/svg'
+    xmlns:xlink="http://www.w3.org/1999/xlink" width="200"
+    height="200">
+  <script type="text/ecmascript">
+    <![CDATA[
+
+           // object representing circle
+           var redcircle;
+
+           // variable representing circle's radius
+           var r;
+
+           window.onload = function() {
+                redcircle = document.getElementById('redcircle');
+            r = parseInt(redcircle.getAttribute("r"));
+           }
+
+           var grow = function() {
+            r = 1.5*r;
+                redcircle.setAttribute("r",r);
+           }
+
+           var shrink = function() {
+            r = r/1.5;
+                redcircle.setAttribute("r",r);
+           }
+
+    ]]>
+  </script>
+  <circle id="redcircle" cx="100" cy="100" r="50" fill="transparent" stroke="red" stroke-width="3" onmousedown="grow()" onmouseup="sh
+rink()"/>
+ </svg>
