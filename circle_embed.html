@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head> 
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=9">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+</head>
+
+<title>SVG Embed code with SVG javascript </title>
+    
+</head>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>   
+        
+        <script type="text/javascript">  
+            jQuery(document).ready(function() {
+                /*
+                 * Replace all SVG images with inline SVG
+                 */
+                    jQuery('img.svg').each(function(){
+                        var $img = jQuery(this);
+                        var imgID = $img.attr('id');
+                        var imgClass = $img.attr('class');
+                        var imgURL = $img.attr('src');
+                
+                        jQuery.get(imgURL, function(data) {
+                            // Get the SVG tag, ignore the rest
+                            var $svg = jQuery(data).find('svg');
+                
+                            // Add replaced image's ID to the new SVG
+                            if(typeof imgID !== 'undefined') {
+                                $svg = $svg.attr('id', imgID);
+                            }
+                            // Add replaced image's classes to the new SVG
+                            if(typeof imgClass !== 'undefined') {
+                                $svg = $svg.attr('class', imgClass+' replaced-svg');
+                            }
+                            
+                            // Remove any invalid XML tags as per http://validator.w3.org
+                            $svg = $svg.removeAttr('xmlns:a');
+                            
+                            // Replace image with new SVG
+                            $img.replaceWith($svg);
+                        });
+    
+                    });
+            });
+        </script>
+
+<script>
+	// fetches the document for the given embedding_element
+	function getSubDocument(embedding_element)
+	{
+		if (embedding_element.contentDocument) 
+		{
+			return embedding_element.contentDocument;
+		} 
+		else 
+		{
+			var subdoc = null;
+			try {
+				subdoc = embedding_element.getSVGDocument();
+			} catch(e) {}
+			return subdoc;
+		}
+	}
+
+	function ColObj(elem, color)
+	{
+		var elms = document.getElementById(elem);
+		var subdoc = getSubDocument(elms);
+		if (subdoc) 
+			subdoc.getElementById("redcircle").setAttribute("stroke", color);
+
+	}
+
+	function ColSVG(elem, color) 
+	{
+		svgElem = document.getElementById('redcircle');
+		svgElem.setAttribute("stroke", color);
+	}
+
+</script>
+
+
+</head>
+<body style="width: 800px; margin:0 0 0 0;  background-image: url(alvin_use1.svg); ">
+  <object id="myObj" data="alvin_embed.svg" width="200px" height="200px"
+    type="image/svg+xml"></object>
+  &lt;Object&gt;
+  <button onclick="ColObj('myObj','blue')" >Blue</button>
+  <button onclick="ColObj('myObj','Red')" >Red</button>
+  <button onclick="ColObj('myObj','Green')" >Green</button>
+<hr>
+  <embed id="myEmb" src="alvin_embed.svg" type="image/svg+xml" width="200px" height="200px" ></embed>
+  &lt;Embed&gt;
+  <button onclick="ColObj('myEmb','blue')" >Blue</button>
+  <button onclick="ColObj('myEmb','Red')" >Red</button>
+  <button onclick="ColObj('myEmb','Green')" >Green</button>
+<hr>
+  <iframe id="myIfr" src="alvin_embed.svg" width="200" height="200" style="border:0" ></iframe>
+  &lt;IFrame&gt;
+  <button onclick="ColObj('myIfr','blue')" >Blue</button>
+  <button onclick="ColObj('myIfr','Red')" >Red</button>
+  <button onclick="ColObj('myIfr','Green')" >Green</button>
+<hr>
+  <img id="myImg" class="svg" src="alvin_embed.svg" width="100" height="100" />
+  &lt;Img&gt; --> &lt;Inline SVG&gt;
+  <button onclick="ColSVG('myImg','blue')" >Blue</button>
+  <button onclick="ColSVG('myImg','Red')" >Red</button>
+  <button onclick="ColSVG('myImg','Green')" >Green</button>
+
+</body>
+</html>
