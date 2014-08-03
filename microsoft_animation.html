@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>  
+  <title>JavaScript SVG Animation</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/> <!-- Remove this line in production. -->
+</head>
+
+<body>
+  <svg width="800px" height="800px" viewBox="0 0 800 800">
+	<g transform="translate(400, 400)"> <!-- Create a Cartesian coordinate system (with the y-axis flipped) for the animated square. That is, place the origin at the center of the 800 x 800 SVG viewport: -->
+
+		<!-- A 200 x 200 square with the upper left-hand corner at (-100, -100). This places the center of the square 
+		at the origin (0, 0): -->  
+		<rect id="mySquare" x="-100" y="-100" width="200" height="200" rx="5" ry="5" 
+			style=" fill: yellow; stroke: yellow; stroke-width: 1; stroke-dasharray: 10, 5;" />
+			
+		<!-- Represents the x-axis: -->
+		<line x1="-400" y1="0" x2="400" y2="0" style="stroke: blue;" /> 
+
+		<!-- Represents the y-axis (although up is negative and down is positive): -->  
+		<line x1="0" y1="-400" x2="0" y2="400" style="stroke: blue;" /> 
+    	<circle cx="0" cy="0" r="141" fill="none" stroke="yellow"/>     	  
+	    <g id="circle_a">
+		  <circle cx="0" cy="0" r="10" fill="none" stroke="blue"/>
+		  <text x="-5" y="5" width="20" height="20">A</text>
+	    </g>
+	    <g id="circle_b">
+		   <circle cx="0" cy="0" r="10" fill="none" stroke="red"/>
+		    <text x="-5" y="5" width="20" height="20">B</text>
+	    </g>
+
+
+    </g>
+
+  </svg>
+  <script>
+    "use strict";
+
+    /* CONSTANTS */
+    var initialTheta = 0; // The initial rotation angle, in degrees.
+    var thetaDelta = 0.3; // The amount to rotate the square about every 16.7 milliseconds, in degrees.
+    var angularLimit = 180; // The maximum number of degrees to rotate the square.
+    var theSquare = document.getElementById("mySquare");
+	var circleA = document.getElementById("circle_a");
+	var circleB = document.getElementById("circle_b");
+	
+    theSquare.currentTheta = initialTheta; // The initial rotation angle to use when the animation starts, stored in a custom property.
+
+    var requestAnimationFrameID = requestAnimationFrame(doAnim); // Start the loop.
+    function doAnim() {
+      if (theSquare.currentTheta > angularLimit) {
+        cancelAnimationFrame(requestAnimationFrameID); // The square has rotated enough, instruct the browser to stop calling the doAnim() function.
+        return; // No point in continuing, bail now.
+      }
+
+      theSquare.setAttribute("transform", "rotate(" + theSquare.currentTheta + ")"); // Rotate the square by a small amount.
+	  circleA.setAttribute("transform", "translate(" +Math.cos((theSquare.currentTheta-45)*Math.PI/180)*141 + "," + Math.sin((theSquare.currentTheta-45)*Math.PI/180)*141+")"); // Move the circle A
+	  circleB.setAttribute("transform", "translate(" +Math.cos((theSquare.currentTheta+45)*Math.PI/180)*141 + "," + Math.sin((theSquare.currentTheta+45)*Math.PI/180)*141+")"); // move the circle B
+      theSquare.currentTheta += thetaDelta;  // Increase the angle that the square will be rotated to, by a small amount.
+      requestAnimationFrameID = requestAnimationFrame(doAnim); // Call the doAnim() function about 60 times per second (60 FPS), or about once every 16.7 milliseconds until cancelAnimationFrame() is called.
+    }
+  </script>
